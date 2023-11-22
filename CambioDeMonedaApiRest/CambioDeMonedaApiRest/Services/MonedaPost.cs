@@ -64,6 +64,10 @@ namespace CambioDeMonedaApiRest.Services
             return System.Threading.Interlocked.Increment(ref idCounter);
         }
 
+        public static int GetIdValue()
+        {
+            return idCounter-1;
+        }
 
     }
 }

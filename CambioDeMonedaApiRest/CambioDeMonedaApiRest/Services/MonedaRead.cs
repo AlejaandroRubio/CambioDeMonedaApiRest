@@ -11,6 +11,7 @@ namespace CambioDeMonedaApiRest.Services
     {
 
         private const string CacheKey = "ContactStore";
+        private const decimal MontoDeTazaDeCambio= 1.5m;
         
         public MonedaRequest[] GetAllContacts()
         {
@@ -35,11 +36,11 @@ namespace CambioDeMonedaApiRest.Services
             // Aquí utilizamos el conversor de moneda para realizar la conversión
             var respuesta = new MonedaResponse
             {
-                Id = MonedaPost.GetNextId(),
+                Id = solicitud.Id,
                 MonedaOrigen = solicitud.MonedaOrigen,
                 MonedaDestino = solicitud.MonedaDestino,
-                Monto = solicitud.Monto,
-                TazaDeCambio = 1.5m
+                Monto = conversorDeMoneda(),
+                TazaDeCambio = MontoDeTazaDeCambio
             };
 
             // Puedes guardar la respuesta en caché o en una base de datos según tus necesidades
@@ -55,6 +56,19 @@ namespace CambioDeMonedaApiRest.Services
             };
         }
 
+        public decimal conversorDeMoneda() {
+
+            MonedaRequest[] monedas = GetAllContacts();
+
+
+            return monedas[MonedaPost.GetIdValue()].Monto * MontoDeTazaDeCambio;
+
+            
+
+
+
+
+        }
 
 
 
