@@ -22,10 +22,34 @@ namespace MonedaDeCambioApiRest.Controllers
             this.monedaRead = new MonedaRead();
         }
 
-        public MonedaRequest[] Get()
+        public MonedaResponse[] Get()
         {
-            return monedaRead.GetAllContacts();
+            // Obtener todas las solicitudes de moneda
+            var solicitudes = monedaRead.GetAllContacts();
+
+            // Crear una lista para almacenar las respuestas convertidas
+            var respuestasConvertidas = new List<MonedaResponse>();
+
+            // Iterar sobre cada solicitud y realizar la conversión
+            foreach (var solicitud in solicitudes)
+            {
+                // Convertir la solicitud utilizando el método ConvertirMoneda
+                var respuestaConvertida = monedaRead.ConvertirMoneda(new MonedaRequest
+                {
+                    Id = solicitud.Id,
+                    MonedaOrigen = solicitud.MonedaOrigen,
+                    MonedaDestino = solicitud.MonedaDestino,
+                    Monto = solicitud.Monto // Puedes utilizar el monto original o el monto convertido según tus necesidades
+                });
+
+                // Agregar la respuesta convertida a la lista
+                respuestasConvertidas.Add(respuestaConvertida);
+            }
+
+            // Devolver la lista de respuestas convertidas
+            return respuestasConvertidas.ToArray();
         }
+
 
         public HttpResponseMessage Post(MonedaRequest contact)
         {

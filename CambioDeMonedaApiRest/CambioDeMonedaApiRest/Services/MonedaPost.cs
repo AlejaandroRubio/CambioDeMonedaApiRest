@@ -12,6 +12,27 @@ namespace CambioDeMonedaApiRest.Services
         private const string CacheKey = "ContactStore";
         private static int idCounter = 0;
 
+
+        public MonedaPost()
+        {
+            var ctx = HttpContext.Current;
+
+            if (ctx != null)
+            {
+                if (ctx.Cache[CacheKey] == null)
+                {
+                    var contacts = new MonedaRequest[]
+                    {
+                        
+               
+                    };
+
+                    ctx.Cache[CacheKey] = contacts;
+                }
+            }
+        }
+
+
         public bool SaveContact(MonedaRequest requestM)
         {
             var ctx = HttpContext.Current;
@@ -38,7 +59,7 @@ namespace CambioDeMonedaApiRest.Services
             return false;
         }
 
-        private int GetNextId()
+        public static int GetNextId()
         {
             return System.Threading.Interlocked.Increment(ref idCounter);
         }
