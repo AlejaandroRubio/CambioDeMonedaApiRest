@@ -9,8 +9,7 @@ namespace CambioDeMonedaApiRest.Models
     {
 
         public int Id { get; set; }
-        public string MonedaOrigen { get; set; }
-        public string MonedaDestino { get; set; }
+        public string Divisa { get; set; }
         public decimal Monto { get; set; }
         public decimal TazaDeCambio { get; set;}
 

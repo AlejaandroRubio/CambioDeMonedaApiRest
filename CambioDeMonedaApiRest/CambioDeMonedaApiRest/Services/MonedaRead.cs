@@ -37,9 +37,8 @@ namespace CambioDeMonedaApiRest.Services
             var respuesta = new MonedaResponse
             {
                 Id = solicitud.Id,
-                MonedaOrigen = solicitud.MonedaOrigen,
-                MonedaDestino = solicitud.MonedaDestino,
-                Monto = conversorDeMoneda(),
+                Divisa = solicitud.MonedaDestino,
+                Monto = conversorDeMoneda(solicitud),
                 TazaDeCambio = MontoDeTazaDeCambio
             };
 
@@ -49,29 +48,26 @@ namespace CambioDeMonedaApiRest.Services
             return new MonedaResponse
             {
                 Id = respuesta.Id,
-                MonedaOrigen = respuesta.MonedaOrigen,
-                MonedaDestino = respuesta.MonedaDestino,
+                Divisa = respuesta.Divisa,
                 Monto = respuesta.Monto,
                 TazaDeCambio = respuesta.TazaDeCambio
             };
         }
 
-        public decimal conversorDeMoneda() {
+        public decimal conversorDeMoneda(MonedaRequest solicitud) {
 
-            MonedaRequest[] monedas = GetAllContacts();
-
-
-            return monedas[MonedaPost.GetIdValue()].Monto * MontoDeTazaDeCambio;
-
-            
-
-
-
-
+            if (solicitud.MonedaOrigen== "EUR" && solicitud.MonedaDestino == "USD")
+            {
+                return solicitud.Monto * MontoDeTazaDeCambio;
+            } else if (solicitud.MonedaOrigen == "USD" && solicitud.MonedaDestino == "EUR")
+            {
+                return Math.Round(solicitud.Monto / MontoDeTazaDeCambio, 2);
+            }
+            else
+            {
+                return 0;
+            }   
         }
-
-
-
 
     }
 }
