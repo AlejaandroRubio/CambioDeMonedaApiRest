@@ -11,7 +11,9 @@ namespace CambioDeMonedaApiRest.Services
     {
 
         private const string CacheKey = "ContactStore";
-        private const decimal MontoDeTazaDeCambio= 1.5m;
+        private const decimal TazaDeCambioUSD_EUR= 1.5m;
+        private const decimal TazaDeCambioEUR_JPY = 163m;
+        private const decimal TazaDeCambioUSD_JPY = 149m;
         
         public MonedaRequest[] GetAllContacts()
         {
@@ -27,7 +29,8 @@ namespace CambioDeMonedaApiRest.Services
                 new MonedaRequest { Id = MonedaPost.GetNextId(),
                                     MonedaOrigen = "Placeholder",
                                     MonedaDestino = "Placeholder",
-                                    Monto = 0,}
+                                    Monto = 0,
+                                  }
             };
         }
 
@@ -38,8 +41,9 @@ namespace CambioDeMonedaApiRest.Services
             {
                 Id = solicitud.Id,
                 Divisa = solicitud.MonedaDestino,
-                Monto = conversorDeMoneda(solicitud),
-                TazaDeCambio = MontoDeTazaDeCambio
+                TazaDeCambio = TazaDeCambioFinal(solicitud),
+                Monto = conversorDeMoneda(solicitud)
+               
             };
 
             // Puedes guardar la respuesta en caché o en una base de datos según tus necesidades
@@ -54,19 +58,41 @@ namespace CambioDeMonedaApiRest.Services
             };
         }
 
+        public decimal TazaDeCambioFinal(MonedaRequest solicitud) { 
+
+            if ( solicitud.MonedaOrigen== "USD"&&solicitud.MonedaDestino == "EUR") { return TazaDeCambioUSD_EUR; }
+            else if (solicitud.MonedaOrigen=="EUR" && solicitud.MonedaDestino == "USD") { return TazaDeCambioUSD_EUR; }
+            else if ( solicitud.MonedaOrigen == "EUR" && solicitud.MonedaDestino == "JPY") { return TazaDeCambioEUR_JPY; }
+            else if (solicitud.MonedaOrigen == "JPY" && solicitud.MonedaDestino == "EUR") { return TazaDeCambioEUR_JPY; }
+            else if (solicitud.MonedaOrigen == "USD" && solicitud.MonedaDestino == "JPY") { return TazaDeCambioUSD_JPY; }
+            else if (solicitud.MonedaOrigen == "JPY" && solicitud.MonedaDestino == "USD") { return TazaDeCambioUSD_JPY; }
+            else { return 0; }
+        
+        }
+
         public decimal conversorDeMoneda(MonedaRequest solicitud) {
 
-            if (solicitud.MonedaOrigen== "EUR" && solicitud.MonedaDestino == "USD")
+            decimal MontoDeTazaDeCambio = TazaDeCambioFinal(solicitud);
+            if (solicitud.MonedaOrigen == "EUR" && solicitud.MonedaDestino == "USD")
             {
                 return solicitud.Monto * MontoDeTazaDeCambio;
             } else if (solicitud.MonedaOrigen == "USD" && solicitud.MonedaDestino == "EUR")
             {
                 return Math.Round(solicitud.Monto / MontoDeTazaDeCambio, 2);
-            }
-            else
+            } else if (solicitud.MonedaOrigen == "JPY" && solicitud.MonedaDestino == "EUR") {
+            
+                return Math.Round(solicitud.Monto / MontoDeTazaDeCambio, 2);
+            }else if (solicitud.MonedaOrigen == "EUR" && solicitud.MonedaDestino == "JPY")
             {
-                return 0;
-            }   
+                return solicitud.Monto * MontoDeTazaDeCambio;
+            }else if (solicitud.MonedaOrigen == "USD" && solicitud.MonedaDestino == "JPY")
+            {
+                return solicitud.Monto * MontoDeTazaDeCambio;
+            }else if (solicitud.MonedaOrigen == "JPY" && solicitud.MonedaDestino == "USD")
+            {
+                return Math.Round(solicitud.Monto / MontoDeTazaDeCambio, 2);
+            }
+            else { return 0; }
         }
 
     }
