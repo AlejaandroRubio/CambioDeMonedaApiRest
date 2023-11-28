@@ -173,6 +173,7 @@
     <Compile Include="Models\MonedaRequest.cs" />
     <Compile Include="Models\MonedaResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\MonedaDelete.cs" />
     <Compile Include="Services\MonedaPost.cs" />
     <Compile Include="Services\MonedaRead.cs" />
   </ItemGroup>

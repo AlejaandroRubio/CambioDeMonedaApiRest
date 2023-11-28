@@ -11,7 +11,7 @@ namespace CambioDeMonedaApiRest.Services
     {
 
         private const string CacheKey = "ContactStore";
-        private const decimal TazaDeCambioUSD_EUR= 1.5m;
+        private const decimal TazaDeCambioUSD_EUR = 1.10m;
         private const decimal TazaDeCambioEUR_JPY = 163m;
         private const decimal TazaDeCambioUSD_JPY = 149m;
         

@@ -15,11 +15,13 @@ namespace MonedaDeCambioApiRest.Controllers
 
         private MonedaPost monedaPost;
         private MonedaRead monedaRead;
+        private MonedaDelete monedaDelete;
 
         public MonedaController()
         {
             this.monedaPost = new MonedaPost();
             this.monedaRead = new MonedaRead();
+            this.monedaDelete = new MonedaDelete();
         }
 
         public MonedaResponse[] Get()
@@ -51,14 +53,27 @@ namespace MonedaDeCambioApiRest.Controllers
         }
 
 
-        public HttpResponseMessage Post(MonedaRequest contact)
+        public HttpResponseMessage Post(MonedaRequest request)
         {
-            this.monedaPost.SaveContact(contact);
+            this.monedaPost.SaveContact(request);
 
-            var response = Request.CreateResponse<MonedaRequest>(System.Net.HttpStatusCode.Created, contact);
+            var response = Request.CreateResponse<MonedaRequest>(System.Net.HttpStatusCode.Created, request);
 
             return response;
         }
 
+        public HttpResponseMessage Delete(MonedaRequest request)
+        {
+            // Aquí deberías implementar la lógica para eliminar la solicitud de moneda con el ID proporcionado
+            // Puedes utilizar el método DeleteContact de monedaPost o cualquier otro método que tengas implementado
+            // en tu lógica de servicios para eliminar una solicitud de moneda.
+
+            var monedaDelete = new MonedaDelete();
+            monedaDelete.DeleteMoneda(request);
+
+            var response = Request.CreateResponse(HttpStatusCode.OK);
+
+            return response;
+        }
     }
 }
